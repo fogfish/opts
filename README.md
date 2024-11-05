@@ -58,6 +58,7 @@ There is no consensus within the Go community on the Option Pattern, as it prese
   - [Mandatory Parameters](#mandatory-parameters)
   - [Presets and defaults](#presets-and-defaults)
   - [Dependency injections](#dependency-injections)
+  - [Practical tips](#practical-tips)
 - [How To Contribute](#how-to-contribute)
   - [commit message](#commit-message)
   - [bugs](#bugs)
@@ -236,6 +237,51 @@ var WithHttp = opts.From[Client](http.New)
 
 c := New(WithHost("127.1"), WithHttp(http.Timeout(5*time.Seconds)))
 ```
+
+### Practical tips
+
+When designing a Go library, the choice between using the Option Pattern and Structs with Fields for configuration or optional parameters depends on various factors. Here are practical tips to help you make an informed decision:
+
+<table align="center">
+  <thead><tr><th></th><th>Option Pattern</th><th>Structs</th></tr></thead>
+  <tbody>
+  <tr>
+    <td>Flexibility and Extensibility</td>
+    <td>✅ Provides high flexibility for future changes. Since options are typically functions that modify internal fields, adding new options in the future won’t require changes to existing struct definitions or method signatures.</td>
+    <td>☣️ Using structs with fields offers less flexibility for future extensions. Once a struct is defined with specific fields, adding new configuration options often requires creating a new struct or modifying the existing one, which could lead to breaking changes in the API.</td>
+  </tr>
+  <tr>
+    <td>Readability and Usability</td>
+    <td>✅ May be less readable if there are too many options, as users may not immediately know what fields are being set without referencing the documentation. However, for complex configurations, the option pattern can make code more expressive and readable by allowing named options.</td>
+    <td>✅ Provides clearer readability because users can see all configuration fields in one place. This makes it easier for users to understand what configurations are available.</td>
+  </tr>
+  <tr>
+    <td>Safety and Type Checking</td>
+    <td>✅ Since options are functions, they can provide stronger compile-time type checking and can validate values more dynamically when applied. For example, you can define each option function to accept specific types or check for valid ranges.</td>
+    <td>☣️ With structs, you risk users incorrectly setting fields, especially if some fields are related. You can use custom types for stricter typing, but it is harder to enforce constraints on field values directly through the struct.</td>
+  </tr>
+  <tr>
+    <td>Complexity</td>
+    <td>✅ Off-the-shelf implementation requires more boilerplate code. Each option function needs to be defined, and you need a method to apply these options to the final configuration. This increases code complexity and verbosity, especially if many options are needed. However, the ⎡🅾🅿🆃🆂⎦ library reduces the complexity</td>
+    <td>✅ Simpler to implement as you define a struct and set its fields directly. This is often more straightforward and reduces the maintenance overhead compared to defining multiple option functions.</td>
+  </tr>
+  <tr>
+    <td>Encapsulation</td>
+    <td>✅ Supports better encapsulation. Since options are applied via functions, you can keep your internal state private, exposing only the necessary configuration APIs to the user. This can help prevent misuse by hiding certain internal details from the API user.</td>
+    <td>☣️ Users may directly modify struct fields, which can lead to unintended consequences if not carefully managed. While fields can be made private, that might limit usability or complicate the API.</td>
+  </tr>
+  <tr>
+    <td>Default Values and Optional Parameters</td>
+    <td>✅ Makes it easy to provide default values and only override those that are explicitly set by the user. It enables a “fluent” API style that is expressive and easy to customize without requiring many constructors.</td>
+    <td>☣️ You can set defaults within the struct directly or through constructor functions, but it can become unwieldy if there are many optional parameters or if defaults need to be conditionally set based on other fields.</td>
+  </tr>
+  <tr>
+    <td>Documentation and Discoverability</td>
+    <td>☣️ It can be harder for users to discover all available options, especially if the options are spread across various files or if the documentation doesn’t clearly list them all together. However, well-named option functions can improve discoverability.</td>
+    <td>✅ All fields are typically visible within the struct definition, which can make it easier for users to quickly understand all configurable parameters.</td>
+  </tr>
+  </tbody>
+</table>
 
 ## How To Contribute
 

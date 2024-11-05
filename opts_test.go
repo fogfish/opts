@@ -114,13 +114,15 @@ func TestOpt(t *testing.T) {
 
 func TestJoin(t *testing.T) {
 	withHost := opts.ForType[Client, Host]()
-	preset := withHost(kHost)
+	withAddr := opts.ForName[Client, string]("addr")
+	preset := opts.Join(withHost(kHost), withAddr(kAddr))
 
 	c, err := New(preset)
 
 	it.Then(t).Should(
 		it.Nil(err),
 		it.Equal(c.host, kHost),
+		it.Equal(c.addr, kAddr),
 	)
 }
 
