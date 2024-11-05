@@ -37,5 +37,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("==> %+v\n", c)
+	fmt.Printf("==> host: %s\n", c.host)
 }
