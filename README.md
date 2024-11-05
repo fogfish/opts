@@ -44,7 +44,7 @@ There is no consensus within the Go community on the Option Pattern, as it prese
 * **Compatibility with Dependency Options**: When two or more libraries are chained, mapping options between dependencies can be tricky. This requires additional layers to translate options, adding more complexity.
 * **Discoverability**: As options are applied through functions rather than struct fields, it can be harder for users to see all available configurations. Users may need to reference documentation to find all options.
 
-`opts` is a lightweight library crafted to streamline and automate the creation of functional options. By abstracting over struct fields (leveraging capabilities like those in [golem/optics](https://github.com/fogfish/golem)), it eliminates the primary issue of boilerplate code. This approach makes defining functional options nearly as straightforward as using a struct-based configuration, reducing complexity while preserving flexibility. 
+⎡🅾🅿🆃🆂⎦ is a lightweight library crafted to streamline and automate the creation of functional options. By abstracting over struct fields (leveraging capabilities like those in [golem/optics](https://github.com/fogfish/golem)), it eliminates the primary issue of boilerplate code. This approach makes defining functional options nearly as straightforward as using a struct-based configuration, reducing complexity while preserving flexibility. 
 
 ## Getting Started
 
