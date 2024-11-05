@@ -1,0 +1,49 @@
+##
+## Build the main branch
+##
+name: build
+on:
+  push:
+    branches:
+      - main
+      - /refs/heads/main
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+
+      - uses: actions/checkout@v4
+     
+      - name: go build
+        run: |
+          go build ./...
+    
+      - name: go test
+        run: |
+          go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
+        env:
+          ## GOPATH required to build serverless app inside unittest
+          GOPATH: /home/runner/go
+          GOCACHE: /home/runner/.cache/go-build
+          GOMODCACHE: /home/runner/go/pkg/mod
+
+
+      - uses: shogo82148/actions-goveralls@v1
+        continue-on-error: true
+        with:
+          path-to-profile: profile.cov
+
+      - name: release
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          for mod in `grep -roh "const Version = \".*" * | grep -Eoh "([[:alnum:]]*/*){1,}v[0-9]*\.[0-9]*\.[0-9]*"`
+          do
+            git tag $mod 2> /dev/null && git push origin -u $mod 2> /dev/null && echo "[+] $mod" || echo "[ ] $mod"
+          done
