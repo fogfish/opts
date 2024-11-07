@@ -32,8 +32,6 @@ import (
 	"github.com/fogfish/golem/optics"
 )
 
-const Version = "v0.0.1"
-
 // Option is an abstract type for configuring instances of `S`.
 // The library provides [ForType], [ForName] and [Opt] helpers to create concrete functional options.
 // These helpers eliminate the need for boilerplate code when defining new options.
@@ -175,7 +173,7 @@ func (opt opt[S, A]) check(s *S) error {
 // Join multiple options to single one, creating defaults and presets.
 func Join[S any](opts ...Option[S]) Option[S] { return options[S](opts) }
 
-// [From] is a helper function for generating functional options to configure
+// [Use] is a helper function for generating functional options to configure
 // instances of `S` with attributes of type `A`, where `A` itself is also
 // configurable through `Option[T]` and factory `f`.
 //
@@ -183,8 +181,8 @@ func Join[S any](opts ...Option[S]) Option[S] { return options[S](opts) }
 //
 //	type Client struct { http.Stack }
 //
-//	var WithHttp = opts.From[Client]("Stack", http.New)
-func From[S, A, T any](f func(...Option[T]) (A, error)) func(...Option[T]) Option[S] {
+//	var WithHttp = opts.Use[Client](http.New)
+func Use[S, A, T any](f func(...Option[T]) (A, error)) func(...Option[T]) Option[S] {
 	lens := optics.ForProduct1[S, A]()
 
 	return func(opts ...Option[T]) Option[S] {
@@ -227,26 +225,45 @@ func (opt make[S, A, T]) check(s *S) error {
 }
 
 // [FMap] is a helper function for generating functional options to configure
-// attributes within instances of `S` using other option types.
-func FMap[S, T any](f func(*S, ...Option[T]) error) func(...Option[T]) Option[S] {
-	return func(opts ...Option[T]) Option[S] {
+// attributes within instances of `S` using input type 'T'.
+func FMap[S, T any](f func(*S, T) error) func(T) Option[S] {
+	return func(value T) Option[S] {
 		return fmap[S, T]{
-			opts: opts,
-			f:    f,
+			value: value,
+			f:     f,
 		}
 	}
 }
 
 type fmap[S, T any] struct {
-	opts options[T]
-	f    func(*S, ...Option[T]) error
+	value T
+	f     func(*S, T) error
 }
 
 //lint:ignore U1000 false positive
-func (opt fmap[S, T]) apply(s *S) error { return opt.f(s, opt.opts) }
+func (opt fmap[S, T]) apply(s *S) error { return opt.f(s, opt.value) }
 
 //lint:ignore U1000 false positive
 func (opt fmap[S, T]) check(s *S) error { return nil }
+
+// [From] is helper function for building default options
+func From[S any](f func(*S) error) func() Option[S] {
+	return func() Option[S] {
+		return from[S]{
+			f: f,
+		}
+	}
+}
+
+type from[S any] struct {
+	f func(*S) error
+}
+
+//lint:ignore U1000 false positive
+func (opt from[S]) apply(s *S) error { return opt.f(s) }
+
+//lint:ignore U1000 false positive
+func (opt from[S]) check(s *S) error { return nil }
 
 // [Apply] sequence of options over the configuration type `S`.
 //

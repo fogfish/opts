@@ -33,11 +33,15 @@ jobs:
         with:
           path-to-profile: profile.cov
 
-      - name: release
+      - uses: reecetech/version-increment@2023.10.2
+        id: version
+        with:
+          scheme: semver
+          increment: patch
+
+      - name: publish
         run: |
           git config user.name "GitHub Actions"
           git config user.email "github-actions@users.noreply.github.com"
-          for mod in `grep -roh "const Version = \".*" * | grep -Eoh "([[:alnum:]]*/*){1,}v[0-9]*\.[0-9]*\.[0-9]*"`
-          do
-            git tag $mod 2> /dev/null && git push origin -u $mod 2> /dev/null && echo "[+] $mod" || echo "[ ] $mod"
-          done
+          git tag ${{ steps.version.outputs.v-version }}
+          git push origin -u ${{ steps.version.outputs.v-version }}
