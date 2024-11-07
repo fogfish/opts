@@ -138,9 +138,9 @@ func NewT(opt ...opts.Option[T]) (*T, error) {
 	return &t, nil
 }
 
-func TestFrom(t *testing.T) {
+func TestUse(t *testing.T) {
 	withHost := opts.ForType[Client, Host]()
-	withClient := opts.From[T](New)
+	withClient := opts.Use[T](New)
 
 	c, err := NewT(withClient(withHost(kHost)))
 

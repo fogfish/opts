@@ -227,13 +227,13 @@ var (
 
 ### Dependency injections
 
-It's common for one library to rely on the functionality of another. In Go, using interfaces and dependency injection is the recommended approach for managing these dependencies. However, in certain edge cases, it can be simpler to handle initialization directly within a top-level constructor, passing configuration options to encapsulate dependencies effectively. The library has helper `opts.From` for generating functional options to configure instances of `S` with attributes of type `A`, where `A` itself is also configurable through `Option[T]` and factory `f`.
+It's common for one library to rely on the functionality of another. In Go, using interfaces and dependency injection is the recommended approach for managing these dependencies. However, in certain edge cases, it can be simpler to handle initialization directly within a top-level constructor, passing configuration options to encapsulate dependencies effectively. The library has helper `opts.Use` for generating functional options to configure instances of `S` with attributes of type `A`, where `A` itself is also configurable through `Option[T]` and factory `f`.
 
 ```go
 type Client struct { *http.Stack }
 
 // The param accepts http.Option and uses http.New function to config Client
-var WithHttp = opts.From[Client](http.New)
+var WithHttp = opts.Use[Client](http.New)
 
 c := New(WithHost("127.1"), WithHttp(http.Timeout(5*time.Seconds)))
 ```
