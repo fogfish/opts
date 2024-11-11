@@ -249,21 +249,23 @@ func (opt fmap[S, T]) check(s *S) error { return nil }
 // [From] is helper function for building default options
 func From[S any](f func(*S) error) func() Option[S] {
 	return func() Option[S] {
-		return from[S]{
-			f: f,
-		}
+		return Type[S](f)
 	}
 }
 
-type from[S any] struct {
-	f func(*S) error
-}
+// [Type] is a foundational type for declaring functional options.
+// Use this type for complete control over option configuration.
+//
+//	func WithAssumedRole(conf aws.Config, role, externalID string) Option {
+//	  return opts.Type(func(*Client) error { ... })
+//	}
+type Type[S any] func(*S) error
 
 //lint:ignore U1000 false positive
-func (opt from[S]) apply(s *S) error { return opt.f(s) }
+func (opt Type[S]) apply(s *S) error { return opt(s) }
 
 //lint:ignore U1000 false positive
-func (opt from[S]) check(s *S) error { return nil }
+func (opt Type[S]) check(s *S) error { return nil }
 
 // [Apply] sequence of options over the configuration type `S`.
 //

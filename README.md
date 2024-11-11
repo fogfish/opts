@@ -58,6 +58,7 @@ There is no consensus within the Go community on the Option Pattern, as it prese
   - [Mandatory Parameters](#mandatory-parameters)
   - [Presets and defaults](#presets-and-defaults)
   - [Dependency injections](#dependency-injections)
+  - [Functional Option compatibility](#functional-option-compatibility)
   - [Practical tips](#practical-tips)
 - [How To Contribute](#how-to-contribute)
   - [commit message](#commit-message)
@@ -236,6 +237,18 @@ type Client struct { *http.Stack }
 var WithHttp = opts.Use[Client](http.New)
 
 c := New(WithHost("127.1"), WithHttp(http.Timeout(5*time.Seconds)))
+```
+
+### Functional Option compatibility
+
+What if an application already defines a functional option using pure functions, yet requires complete control over each option and its parameters? For example, migrating a complex setup to align with this library’s types may present challenges, or perhaps a unique option needs multiple parameters. This library provides a straightforward way to convert a pure function into the required option type, supporting smooth integration while allowing detailed customization.
+
+```go
+func WithAssumedRole(conf aws.Config, role, externalID string) Option {
+  return opts.Type(func(*Client) error {
+    // use conf, role & external id to assume new role
+  })
+}
 ```
 
 ### Practical tips
