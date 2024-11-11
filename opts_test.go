@@ -9,6 +9,7 @@
 package opts_test
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/fogfish/it/v2"
@@ -122,6 +123,34 @@ func TestJoin(t *testing.T) {
 	it.Then(t).Should(
 		it.Nil(err),
 		it.Equal(c.host, kHost),
+		it.Equal(c.addr, kAddr),
+	)
+}
+
+func TestFMap(t *testing.T) {
+	withAddr := opts.FMap(func(c *Client, addr int) error {
+		c.addr = strconv.Itoa(addr)
+		return nil
+	})
+
+	c, err := New(withAddr(8080))
+
+	it.Then(t).Should(
+		it.Nil(err),
+		it.Equal(c.addr, "8080"),
+	)
+}
+
+func TestFrom(t *testing.T) {
+	withAddr := opts.From(func(c *Client) error {
+		c.addr = kAddr
+		return nil
+	})
+
+	c, err := New(withAddr())
+
+	it.Then(t).Should(
+		it.Nil(err),
 		it.Equal(c.addr, kAddr),
 	)
 }
