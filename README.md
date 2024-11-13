@@ -32,7 +32,7 @@
 
 --- 
 
-Lightweight library crafted to streamline and automate Golang's Functional Option Pattern.
+Lightweight library crafted to streamline and automate Golang's Functional Option Pattern. Would you like to know more? Read the post - [Next-Gen Functional Options in Golang: Effortless Configuration, Zero Boilerplate.](https://medium.com/@dmkolesnikov/next-gen-functional-options-in-golang-effortless-configuration-zero-boilerplate-8bb47b1872fc)
 
 ## Inspiration
 
