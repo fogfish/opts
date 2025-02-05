@@ -1,6 +1,10 @@
 github.com/fogfish/golem/hseq v1.2.0 h1:B6yrzOHQNoTqSlhLb+AvK7dhEAELjHThrCQTF/uqwbM=
 github.com/fogfish/golem/hseq v1.2.0/go.mod h1:17XORt8nNKl6KOhF43MHSmjK8NksbkBsohAoJGiinUs=
+github.com/fogfish/golem/hseq v1.3.0 h1:WIJViOF7vsPHvqVLzFrIz4QrBI4EPTC34esrQnjqUvk=
+github.com/fogfish/golem/hseq v1.3.0/go.mod h1:17XORt8nNKl6KOhF43MHSmjK8NksbkBsohAoJGiinUs=
 github.com/fogfish/golem/optics v0.13.1 h1:gkvJ5f7/AXaL8EuHLu5dgE/BwUSg/WX50D7b8f4G+6s=
 github.com/fogfish/golem/optics v0.13.1/go.mod h1:U1y90OVcXF/A61dIP3abQ0x2GweTmzVHPC15pv0pcM0=
+github.com/fogfish/golem/optics v0.14.0 h1:8XFZ6rlr6GlwDPB/jUtEcPbFngbpY9DfArDXcFN2mts=
+github.com/fogfish/golem/optics v0.14.0/go.mod h1:aTXUA/VC6yu3zbUN1Tmy4Z4IW0jxfDFF4c2UB5MuwkA=
 github.com/fogfish/it/v2 v2.0.2 h1:UR6yVemf8zD3WVs6Bq0zE6LJwapZ8urv9zvU5VB5E6o=
 github.com/fogfish/it/v2 v2.0.2/go.mod h1:HHwufnTaZTvlRVnSesPl49HzzlMrQtweKbf+8Co/ll4=
