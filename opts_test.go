@@ -179,6 +179,32 @@ func TestUse(t *testing.T) {
 	)
 }
 
+type E struct {
+	*Client
+}
+
+func NewE(opt ...opts.Option[E]) (*E, error) {
+	t := E{}
+	if err := opts.Apply(&t, opt); err != nil {
+		return nil, err
+	}
+	return &t, nil
+}
+
+func TestUseWithEmbedded(t *testing.T) {
+	withHost := opts.ForType[Client, Host]()
+	withClient := opts.Use[E](New)
+
+	c, err := NewE(withClient(withHost(kHost)))
+
+	it.Then(t).Should(
+		it.Nil(err),
+		it.Equal(c.Client.host, kHost),
+	)
+}
+
+//------------------------------------------------------------------------------
+
 func TestRequired(t *testing.T) {
 	withHost := opts.ForType[Client, Host]()
 	withAddr := opts.ForName[Client, string]("addr")
